@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-interface UserSchema {
+export interface UserSchema {
   email: string;
   fullName: string;
   password: string;
