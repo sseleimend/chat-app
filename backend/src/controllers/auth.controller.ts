@@ -1,7 +1,10 @@
 import { type Request, type Response } from "express";
 import bcrypt from "bcryptjs";
 
-import User, { type UserSchema } from "../models/user.model.ts";
+import User, {
+  type LoginSchema,
+  type UserSchema,
+} from "../models/user.model.ts";
 import { genJWT } from "../lib/utils.ts";
 
 type AuthReq<T = {}> = Request<{}, {}, T>;
@@ -50,11 +53,38 @@ export const signup = async (req: AuthReq<UserSchema>, res: Response) => {
   } catch (error) {
     if (error instanceof Error)
       console.log("Error in signup controller", error.message);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
   }
 };
 
-export const login = (req: AuthReq, res: Response) => {
-  res.send("login route");
+export const login = async (req: AuthReq<LoginSchema>, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).select("-password");
+    if (!user)
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect)
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+
+    genJWT(user._id, res);
+
+    res.status(200).json(user);
+  } catch (error) {
+    if (error instanceof Error)
+      console.log("Error in login controller", error.message);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
 };
 
 export const logout = (req: AuthReq, res: Response) => {
