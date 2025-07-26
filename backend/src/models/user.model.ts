@@ -7,6 +7,11 @@ export interface UserSchema {
   profilePic: string;
 }
 
+export interface LoginSchema {
+  email: string;
+  password: string;
+}
+
 const userSchema = new mongoose.Schema<UserSchema>(
   {
     email: {
