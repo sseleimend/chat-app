@@ -6,6 +6,8 @@ import User, {
   type UserSchema,
 } from "../models/user.model.ts";
 import { genJWT } from "../lib/utils.ts";
+import { ReqWithUser } from "../middlewares/auth.middleware.ts";
+import cloudinary from "../lib/cloudinary.ts";
 
 type AuthReq<T = {}> = Request<{}, {}, T>;
 
@@ -99,6 +101,39 @@ export const logout = (req: AuthReq, res: Response) => {
     res.status(200).json({
       message: "Logout successfully",
     });
+  } catch (error) {
+    if (error instanceof Error)
+      console.log("Error in login controller", error.message);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const updateProfile = async (
+  req: AuthReq<{ profilePic: string }>,
+  res: Response
+) => {
+  try {
+    const { profilePic } = req.body;
+
+    const userId = (req as ReqWithUser).user._id;
+
+    if (!profilePic)
+      return res.status(400).json({
+        message: "Profile picture is required",
+      });
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        profilePic: uploadResponse.secure_url,
+      },
+      { new: true }
+    ).select("-password");
+
+    res.status(200).json(updatedUser);
   } catch (error) {
     if (error instanceof Error)
       console.log("Error in login controller", error.message);
