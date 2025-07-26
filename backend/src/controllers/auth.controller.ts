@@ -6,7 +6,7 @@ import User, {
   type UserSchema,
 } from "../models/user.model.ts";
 import { genJWT } from "../lib/utils.ts";
-import { ReqWithUser } from "../middlewares/auth.middleware.ts";
+import { type ReqWithUser } from "../middlewares/auth.middleware.ts";
 import cloudinary from "../lib/cloudinary.ts";
 
 type AuthReq<T = {}> = Request<{}, {}, T>;
@@ -134,6 +134,18 @@ export const updateProfile = async (
     ).select("-password");
 
     res.status(200).json(updatedUser);
+  } catch (error) {
+    if (error instanceof Error)
+      console.log("Error in login controller", error.message);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const checkAuth = (req: Request, res: Response) => {
+  try {
+    res.status(200).json((req as ReqWithUser).user);
   } catch (error) {
     if (error instanceof Error)
       console.log("Error in login controller", error.message);
