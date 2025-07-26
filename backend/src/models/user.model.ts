@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { type HydratedDocument } from "mongoose";
 
 export interface UserSchema {
   email: string;
@@ -6,6 +6,8 @@ export interface UserSchema {
   password: string;
   profilePic: string;
 }
+
+export type UserDoc = HydratedDocument<UserSchema>;
 
 export interface LoginSchema {
   email: string;
