@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import { ReqWithUser } from "../middlewares/auth.middleware";
-import User from "../models/user.model";
-import { Message } from "../models/message.model";
-import cloudinary from "../lib/cloudinary";
+import { type Request, type Response } from "express";
+import { type ReqWithUser } from "../middlewares/auth.middleware.ts";
+import User from "../models/user.model.ts";
+import { Message } from "../models/message.model.ts";
+import cloudinary from "../lib/cloudinary.ts";
 
 export const getUsersForSidebar = async (req: Request, res: Response) => {
   try {
