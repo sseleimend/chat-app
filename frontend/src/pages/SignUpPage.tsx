@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import {
   Eye,
   EyeOff,
-  Loader,
+  Loader2,
   Lock,
   Mail,
   MessageSquare,
@@ -148,7 +148,7 @@ const SignUpPage = () => {
             >
               {isSigningUp ? (
                 <>
-                  <Loader className="size-6 animate-spin" />
+                  <Loader2 className="size-6 animate-spin" />
                   Loading...
                 </>
               ) : (
