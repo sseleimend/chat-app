@@ -15,6 +15,7 @@ interface AuthStore {
   checkAuth: () => Promise<void>;
   signup: (data: object) => Promise<void>;
   logout: () => Promise<void>;
+  login: (data: object) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -66,6 +67,22 @@ export const useAuthStore = create<AuthStore>()(
 
         if (error instanceof AxiosError)
           toast.error(error.response?.data.message);
+      }
+    },
+
+    login: async (data) => {
+      set({ isLoggingIn: true });
+      try {
+        const res = await axiosInstance.post("/auth/login", data);
+        set({ authUser: res.data });
+        toast.success("Logged in successfully");
+      } catch (error) {
+        console.log("Error in login", error);
+
+        if (error instanceof AxiosError)
+          toast.error(error.response?.data.message);
+      } finally {
+        set({ isLoggingIn: false });
       }
     },
   }))
