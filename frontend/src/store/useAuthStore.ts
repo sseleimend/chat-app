@@ -6,7 +6,12 @@ import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 
 interface AuthStore {
-  authUser: object | null;
+  authUser: {
+    profilePic: string;
+    fullName: string;
+    email: string;
+    createdAt: string;
+  } | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
@@ -16,6 +21,7 @@ interface AuthStore {
   signup: (data: object) => Promise<void>;
   logout: () => Promise<void>;
   login: (data: object) => Promise<void>;
+  updateProfile: (data: object) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -83,6 +89,22 @@ export const useAuthStore = create<AuthStore>()(
           toast.error(error.response?.data.message);
       } finally {
         set({ isLoggingIn: false });
+      }
+    },
+
+    updateProfile: async (data) => {
+      set({ isUpdatingProfile: true });
+      try {
+        const res = await axiosInstance.put("/auth/update-profile", data);
+        set({ authUser: res.data });
+        toast.success("Profile updated successfully");
+      } catch (error) {
+        console.log("Error in updateProfile", error);
+
+        if (error instanceof AxiosError)
+          toast.error(error.response?.data.message);
+      } finally {
+        set({ isUpdatingProfile: false });
       }
     },
   }))
