@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 import { immer } from "zustand/middleware/immer";
 import { AxiosError } from "axios";
+import { useAuthStore } from "./useAuthStore";
 
 export interface User {
   _id: string;
@@ -28,6 +29,8 @@ interface ChatStore {
   getMessages: (userId: string) => void;
   setSelectedUser: (selectedUser: User | null) => void;
   sendMessage: (messageData: object) => Promise<void>;
+  subscribeToMessages: () => void;
+  unsubscribeFromMessages: () => void;
 }
 
 export const useChatStore = create<ChatStore>()(
@@ -82,6 +85,21 @@ export const useChatStore = create<ChatStore>()(
         if (error instanceof AxiosError)
           toast.error(error.response?.data.message);
       }
+    },
+    subscribeToMessages: () => {
+      const { selectedUser } = get();
+      if (!selectedUser) return;
+
+      const socket = useAuthStore.getState().socket;
+      socket?.on("newMessage", (newMessage) =>
+        set((state) => {
+          state.messages.push(newMessage);
+        })
+      );
+    },
+    unsubscribeFromMessages: () => {
+      const socket = useAuthStore.getState().socket;
+      socket?.off("newMessage");
     },
     setSelectedUser: (selectedUser) => set({ selectedUser }),
   }))
