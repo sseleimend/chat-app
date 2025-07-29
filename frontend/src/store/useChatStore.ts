@@ -21,10 +21,11 @@ interface ChatStore {
   getUsers: () => void;
   getMessages: (userId: string) => void;
   setSelectedUser: (selectedUser: User | null) => void;
+  sendMessage: (messageData: object) => Promise<void>;
 }
 
 export const useChatStore = create<ChatStore>()(
-  immer((set) => ({
+  immer((set, get) => ({
     messages: [],
     users: [],
     selectedUser: null,
@@ -57,6 +58,23 @@ export const useChatStore = create<ChatStore>()(
           toast.error(error.response?.data.message);
       } finally {
         set({ isMessagesLoading: false });
+      }
+    },
+    sendMessage: async (data) => {
+      const { selectedUser } = get();
+      try {
+        const res = await axiosInstance.post(
+          `/message/send/${selectedUser?._id}`,
+          data
+        );
+        set((state) => {
+          state.messages.push(res.data);
+        });
+      } catch (error) {
+        console.log("Error in sendMessage", error);
+
+        if (error instanceof AxiosError)
+          toast.error(error.response?.data.message);
       }
     },
     setSelectedUser: (selectedUser) => set({ selectedUser }),
