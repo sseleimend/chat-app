@@ -20,7 +20,7 @@ interface ChatStore {
 
   getUsers: () => void;
   getMessages: (userId: string) => void;
-  setSelectedUser: (selectedUser: User) => void;
+  setSelectedUser: (selectedUser: User | null) => void;
 }
 
 export const useChatStore = create<ChatStore>()(
