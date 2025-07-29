@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 
 interface AuthStore {
   authUser: {
+    _id: string;
     profilePic: string;
     fullName: string;
     email: string;
