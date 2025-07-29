@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon"
+    "dev": "cross-env NODE_ENV=development nodemon",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",

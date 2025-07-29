@@ -1,13 +1,10 @@
 import { type Request, type Response } from "express";
 import bcrypt from "bcryptjs";
 
-import User, {
-  type LoginSchema,
-  type UserSchema,
-} from "../models/user.model.ts";
-import { genJWT } from "../lib/utils.ts";
-import { type ReqWithUser } from "../middlewares/auth.middleware.ts";
-import cloudinary from "../lib/cloudinary.ts";
+import User, { type LoginSchema, type UserSchema } from "../models/user.model";
+import { genJWT } from "../lib/utils";
+import { type ReqWithUser } from "../middlewares/auth.middleware";
+import cloudinary from "../lib/cloudinary";
 
 type AuthReq<T = {}> = Request<{}, {}, T>;
 

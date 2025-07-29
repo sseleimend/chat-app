@@ -1,5 +1,5 @@
 import jwt, { type JwtPayload } from "jsonwebtoken";
-import User, { type UserDoc } from "../models/user.model.ts";
+import User, { type UserDoc } from "../models/user.model";
 import { type NextFunction, type Request, type Response } from "express";
 
 export interface ReqWithUser extends Request {

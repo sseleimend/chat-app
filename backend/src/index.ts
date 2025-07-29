@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import authRoutes from "./routes/auth.route.ts";
-import messageRoutes from "./routes/message.route.ts";
-import { connectDb } from "./lib/db.ts";
-import { app, server } from "./lib/socket.ts";
+import authRoutes from "./routes/auth.route";
+import messageRoutes from "./routes/message.route";
+import { connectDb } from "./lib/db";
+import { app, server } from "./lib/socket";
 
 dotenv.config();
 
