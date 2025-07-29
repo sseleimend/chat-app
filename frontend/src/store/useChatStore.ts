@@ -12,7 +12,13 @@ export interface User {
 }
 
 interface ChatStore {
-  messages: object[];
+  messages: Array<{
+    _id: string;
+    senderId: string;
+    createdAt: string;
+    image: string;
+    text: string;
+  }>;
   users: User[];
   selectedUser: User | null;
   isUsersLoading: boolean;
