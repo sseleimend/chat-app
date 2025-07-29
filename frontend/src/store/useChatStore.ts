@@ -91,11 +91,14 @@ export const useChatStore = create<ChatStore>()(
       if (!selectedUser) return;
 
       const socket = useAuthStore.getState().socket;
-      socket?.on("newMessage", (newMessage) =>
+      socket?.on("newMessage", (newMessage) => {
+        const isMessageSentFromSelectedUser =
+          newMessage.senderId !== selectedUser._id;
+        if (!isMessageSentFromSelectedUser) return;
         set((state) => {
           state.messages.push(newMessage);
-        })
-      );
+        });
+      });
     },
     unsubscribeFromMessages: () => {
       const socket = useAuthStore.getState().socket;
